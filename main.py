@@ -1,4 +1,6 @@
 from collections import defaultdict
+from operator import attrgetter
+
 
 class Tasks:
     def __init__(self, task_id, earnings, start_time, end_time):
@@ -7,7 +9,7 @@ class Tasks:
         self.start_time = start_time
         self.end_time = end_time
         self.duration = (end_time - start_time)
-
+        self.bang_4_buck = (self.earnings / self.duration)
 
 # ---------------------------------------------------------------- #
 def add_tasks():
@@ -54,7 +56,7 @@ def prev(n):
 
 
 # ---------------------------------------------------------------- #
-def get_max(n):
+def recursive_max(n):
 
     if n == 0:
         return 0
@@ -65,12 +67,12 @@ def get_max(n):
         do_task = value(n) + value_dict[previous][0]
 
     else:
-        do_task = value(n) + get_max(previous)
+        do_task = value(n) + recursive_max(previous)
 
     if n-1 in path_dict:
        dont_do_task = value_dict[n-1][0]
     else:
-        dont_do_task = get_max(n-1)
+        dont_do_task = recursive_max(n - 1)
 
     if do_task > dont_do_task:
         if n not in path_dict:
@@ -103,10 +105,26 @@ def value(n):
 
 
 # ---------------------------------------------------------------- #
+def non_recursive_max():
+    prev_list = []
+    opt_list = [0]
+
+    for task in task_list:
+        prev_list.append(prev(task.task_id))
+
+    for j in range(1, 9):
+        a = task_list[j-1].earnings + opt_list[prev_list[j-1]]
+        b = opt_list[j-1]
+        opt_list.append(max(a, b))
+
+# ---------------------------------------------------------------- #
 # takes a number n and the list of all tasks
 def calculate():
-    for i in range(8):
-        get_max(i+1)
+    # for i in range(6):
+    #     recursive_max(i + 1)
+
+    path_dict[0].append(0)
+    non_recursive_max()
 
 
 # ---------------------------------------------------------------- #
@@ -154,5 +172,6 @@ if __name__ == '__main__':
     path_dict = defaultdict(list)
 
     calculate()
-    print(path_dict)
+
+
 
