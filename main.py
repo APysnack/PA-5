@@ -11,6 +11,24 @@ class Tasks:
         self.duration = (end_time - start_time)
         self.bang_4_buck = (self.earnings / self.duration)
 
+
+def brute_force():
+    x = len(task_list)
+
+    # the range of (1 - x) where x is length of task list
+    # (1 - 8)
+    num_list = range(1, x + 1)
+    mylist = []
+
+    for item in num_list:
+        root = item
+
+        for num in range(1, root+1):
+            print(task_list[num].task_id)
+
+    print(mylist)
+
+
 # ---------------------------------------------------------------- #
 def add_tasks():
     task_continue = 'y'
@@ -63,6 +81,7 @@ def recursive_max(n):
 
     previous = prev(n)
 
+    # foo, can i remove this and only use the recursive function?
     if previous in path_dict:
         do_task = value(n) + value_dict[previous][0]
 
@@ -103,19 +122,52 @@ def value(n):
     n_value = task_list[n-1].earnings
     return n_value
 
-
 # ---------------------------------------------------------------- #
-def non_recursive_max():
+def non_recursive_max(n):
     prev_list = []
     opt_list = [0]
 
+    # gets a list of each element's previous value
     for task in task_list:
         prev_list.append(prev(task.task_id))
 
-    for j in range(1, 9):
+    # for each element in thee array
+    for j in range(1, len(task_list) + 1):
+        # a is the value of doing the task, j earnings + max(j-1)
         a = task_list[j-1].earnings + opt_list[prev_list[j-1]]
+
+        # b is the value of not doing the task, the max(j-1)
         b = opt_list[j-1]
+
+        # if do task > dont do task
+        if a > b:
+            # if the current value of j does not have a key in the path dict
+            if j not in path_dict:
+
+                # if the task has a previous task
+                if prev_list[j - 1] > 0:
+
+                    # for each path in the prev dictionary key (e.g. prev = 4 has path [1, 4])
+                    for path in path_dict[prev_list[j-1]]:
+                        # add those paths to j's list of paths
+                        path_dict[j].append(path)
+                # finally, add the current path
+                path_dict[j].append(j)
+
+        # else if dont do task > do task
+        elif b > a:
+            # if j is not in the path dictionary
+            if j not in path_dict:
+                # for each path in the j - 1 path, add it to j's path
+                for path in path_dict[j - 1]:
+                    path_dict[j].append(path)
+
+
         opt_list.append(max(a, b))
+
+    print(path_dict)
+
+    return opt_list[n]
 
 # ---------------------------------------------------------------- #
 # takes a number n and the list of all tasks
@@ -123,8 +175,10 @@ def calculate():
     # for i in range(6):
     #     recursive_max(i + 1)
 
-    path_dict[0].append(0)
-    non_recursive_max()
+    # path_dict[0].append(0)
+    # non_recursive_max(3)
+
+    brute_force()
 
 
 # ---------------------------------------------------------------- #
