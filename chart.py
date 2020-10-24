@@ -2,9 +2,10 @@ import matplotlib.pyplot as plt
 import random
 
 
-def display_chart(task_list):
+def display_chart(task_list, output_str):
 
-    fig, gnt = plt.subplots()
+    fig, gnt = plt.subplots(figsize=(15, 7))
+    fig.subplots_adjust(bottom=0.1, right=0.5, left=0.04)
     end = task_list[0].end_time
     list_range = range(1, end + 1)
     range_list = []
@@ -39,5 +40,15 @@ def display_chart(task_list):
     gnt.set_xlabel('Time')
     gnt.set_ylabel('Processes')
     gnt.set_title('Weighted Job Scheduling')
+
+    if len(task_list) <= 3:
+        gnt.annotate(output_str, xy=(0, 1), xytext=(8, 2))
+
+    elif len(task_list) <= 5:
+        gnt.annotate(output_str, xy=(0, 1), xytext=(10, 2))
+
+    else:
+        gnt.annotate(output_str, xy=(0, 1), xytext=(12, 2))
+
 
     plt.show()
