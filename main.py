@@ -1,5 +1,6 @@
 from collections import defaultdict
 from operator import attrgetter
+from itertools import permutations
 
 
 class Tasks:
@@ -12,21 +13,48 @@ class Tasks:
         self.bang_4_buck = (self.earnings / self.duration)
 
 
+def is_valid(num_list):
+    length = len(num_list)
+    i = 0
+    valid = False
+
+    while i < length:
+        if i+2 > length:
+            break
+        if task_list[num_list[i] - 1].end_time <= task_list[num_list[i+1] - 1].start_time:
+            valid = True
+        else:
+            valid = False
+            break
+        i += 1
+
+    return valid
+
+
 def brute_force():
-    x = len(task_list)
+    length = len(task_list)
+    num_list = range(1, 9)
+    valid_list = []
+    earning_list = []
 
-    # the range of (1 - x) where x is length of task list
-    # (1 - 8)
-    num_list = range(1, x + 1)
-    mylist = []
+    # creates every possible permutation of the list items
+    for i in range(1, length + 1):
+        perm = permutations(num_list, i)
 
-    for item in num_list:
-        root = item
+        # finds all permutations that have valid path sequences
+        for j in perm:
+            if is_valid(j):
+                # creates a list of all the valid sequences
+                valid_list.append(j)
 
-        for num in range(1, root+1):
-            print(task_list[num].task_id)
+    # sums up the totals of the valid sequences
+    for item in valid_list:
+        total = 0
+        for instance in item:
+            total += task_list[instance-1].earnings
+        earning_list.append(total)
 
-    print(mylist)
+    return max(earning_list)
 
 
 # ---------------------------------------------------------------- #
