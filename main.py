@@ -2,6 +2,7 @@ from collections import defaultdict
 from operator import attrgetter
 from itertools import permutations
 from time import perf_counter_ns
+import chart
 
 
 class Tasks:
@@ -328,3 +329,7 @@ if __name__ == '__main__':
     path_dict = defaultdict(list)
 
     calculate()
+
+    ordered_list = sorted(task_list, key=attrgetter("end_time"), reverse=True)
+
+    chart.display_chart(ordered_list)
