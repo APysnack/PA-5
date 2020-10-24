@@ -83,15 +83,26 @@ def brute_force():
 
 # ---------------------------------------------------------------- #
 def add_tasks():
+    task_list.clear()
     task_continue = 'y'
     i = 1
     j = 1
 
+    print("\nThe task list has been emptied.\n")
+
     while task_continue == 'y' or task_continue == 'Y':
         try:
             task_earnings = int(input(f"Please enter the earnings value for task {j}:\n"))
+            while task_earnings < 0:
+                task_earnings = int(input(f"Please enter a positive number for the earnings value of Task {j}:\n"))
+
             task_start = int(input(f"Please enter the start time for task {j}:\n"))
+            while task_start < 0:
+                task_start = int(input(f"Please enter a positive number for the start time of Task {j}:\n"))
+
             task_end = int(input(f"Please enter the end time for task {j}:\n"))
+            while task_end < 0:
+                task_end = int(input(f"Please enter a positive number for the end time of Task {j}:\n"))
 
             while task_end < task_start:
                 task_end = int(input(f"Please select a task end time greater than the start time ({task_start}):\n"))
@@ -258,6 +269,11 @@ def format_output(r_max, r_path, r_time, nr_max, nr_path, nr_time, bf_max, bf_pa
 # ---------------------------------------------------------------- #
 # takes a number n and the list of all tasks
 def calculate():
+
+    if not task_list:
+        print("List is empty, please try again after entering values")
+        return
+
     length = len(task_list)
     r_max_earnings, nr_max_earnings, bf_max_earnings = 0, 0, 0
     r_path, nr_path, bf_path = [], [], ()
@@ -293,28 +309,74 @@ def calculate():
     return output_string
 
 
+def view_tasks():
+    out_str = '\nCurrent Task List\n'
+    out_str += '--------------------------------------------------------\n'
+
+    for item in task_list:
+        out_str += f'Task ID: {item.task_id} || Start Time: {item.start_time} || End Time: {item.end_time} || ' \
+                   f'Value: {item.earnings}\n'
+
+    out_str += '--------------------------------------------------------\n'
+
+    print(out_str)
+
+
+def delete_task():
+    num_list = []
+    num_range = range(1, len(task_list) + 1)
+    for num in num_range:
+        num_list.append(num)
+
+    del_id = int(input("Please select a Task ID that you would like to delete\n"))
+
+    if del_id in num_list:
+        task_list.pop(del_id - 1)
+        copy_list = task_list.copy()
+        task_list.clear()
+        i = 1
+
+        print(copy_list)
+
+        for item in copy_list:
+            task_list.append(Tasks(i, item.earnings, item.start_time, item.end_time))
+            i += 1
+
+        print("Task deleted from list!\n")
+
+    else:
+        print("Not in list")
+
 # ---------------------------------------------------------------- #
 def user_menu():
-    option_list = [1, 2, 3]
+    option_list = [1, 2, 3, 4, 5]
     user_input = -1
 
-    while user_input != 3:
+    while user_input != 5:
         try:
-            user_input = int(input("Please select from the following options:\n"
+            user_input = int(input("\nPlease select from the following options:\n"
                                    "1. Enter new Tasks\n"
-                                   "2. Calculate Optimal Path\n"
-                                   "3. Exit Program\n"))
+                                   "2. View List of Tasks\n"
+                                   "3. Delete a Task\n"
+                                   "4. Calculate Optimal Path\n"
+                                   "5. Terminate Program Immediately\n"))
 
             if user_input not in option_list:
-                print("Please choose a number from 1 - 2")
+                print("Please choose a number from 1 - 5")
 
             if user_input == 1:
                 task_list = add_tasks()
 
             elif user_input == 2:
-                return -2
+                view_tasks()
 
             elif user_input == 3:
+                delete_task()
+
+            elif user_input == 4:
+                return -2
+
+            elif user_input == 5:
                 print("Goodbye")
                 return -1
 
@@ -330,9 +392,9 @@ if __name__ == '__main__':
     path_dict = defaultdict(list)
 
     user_continue = user_menu()
-    user_continue = -2
 
     if user_continue == -2:
         output = calculate()
         ordered_list = sorted(task_list, key=attrgetter("end_time"), reverse=True)
         chart.display_chart(ordered_list, output)
+        calculate()

@@ -1,9 +1,13 @@
+import matplotlib
+
+import warnings
+warnings.filterwarnings("ignore", "(?s).*MATPLOTLIBDATA.*", category=UserWarning)
+
 import matplotlib.pyplot as plt
 import random
 
 
 def display_chart(task_list, output_str):
-
     fig, gnt = plt.subplots(figsize=(15, 7))
     fig.subplots_adjust(bottom=0.1, right=0.5, left=0.04)
     end = task_list[0].end_time

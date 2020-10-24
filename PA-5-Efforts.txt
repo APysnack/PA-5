@@ -1,0 +1,23 @@
+------------------------------------------
+How to run the program?
+------------------------------------------
+You should be able to simply run the PA-5-Executable.exe file on any Windows operating system and follow along with the prompts. 
+
+A demo is given here in case there are any issues. This demo uses the data from the MaxEarning.png chart Dr. Huang gave us:
+
+https://www.youtube.com/watch?v=2EM83RJ9BUI
+
+1 - Allows you to enter a series of tasks (Note that this will clear the list of any existing tasks)
+2 - Allows you to view the tasks you've entered in text format (optional)
+3 - Allows you to delete a single task from your list of tasks (optional)
+4 - Will perform the calculations and display the chart of tasks
+5 - Exit the program immediately
+
+
+------------------------------------------
+Because of the complexity of this assignment and the short time-frame, there are some noteworthy caveats:
+------------------------------------------
+
+1. Please disregard the warning regarding matplotlib. Their newer version removed a file that pyinstaller was dependent upon and a solution could not be found to suppress this warning successfully.
+2. For a large quantity of tasks (12+) the scaling on the graph display may be off
+3. Windows defender may flag the executable as a threat. No csv files were included for this project since the homework details do not mention including a csv file.
